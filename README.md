@@ -88,7 +88,7 @@ $ sudo chmod +x /usr/local/bin/docker-compose
 #### Step 3: Clone this repo
 
 ```
-$ git clone https://github.com/xxcodianxx/youtube-dl-web
+$ git clone https://github.com/ProudlyTM/youtube-dl-web.git
 ```
 
 #### Step 2: Build Frontend Static Files
@@ -116,29 +116,3 @@ And view their logs with:
 ```
 $ docker-compose logs -f
 ```
-
-### SSL
-
-The steps above describe running youtube-dl-web without SSL, meaning that all traffic sent to and from your webserver is over the internet in the clear! 
-
-It's not like there's that much sensitive data being sent over, but it's nice to have HTTPS support.
-
-For home hosting, this is not required at all.
-
-#### Obtaining SSL Certificates
-The NGINX config is set up for Let's Encrypt certificates.
-
-Once generated with `certbot`, they can be found in `/etc/letsencrypt/live/yourdomain.example.net/*.pem`
-
-#### Enabling SSL Support
-
-Add your certificates (files `fullchain.pem` and `privkey.pem`) into the `nginx/certs` directory. You can obtain these from Let's Encrypt with certbot.
-
-First, stop the cluster if you have it running:
-```
-$ docker-compose down
-```
-
-Then, go into the `docker-compose.yml` file and follow the commented directions.
-
-After this, repeat step 3 again, and you should be good to go!

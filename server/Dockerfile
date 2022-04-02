@@ -1,5 +1,15 @@
-# PRODUCTION DOCKERFILE
-FROM python:3.9-slim
+# new base (python:3.9-slim->ubuntu:latest)
+FROM ubuntu:latest
+
+# install required packages
+RUN apt update \
+ && apt install -y software-properties-common \
+ && add-apt-repository -y ppa:deadsnakes/ppa \
+ && apt install -y sudo python3.9 python3-pip nginx ffmpeg
+
+# create the static web folder and replace the nginx config
+RUN mkdir -p /etc/ytdl-web/static
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # install deps as root
 COPY ./requirements.txt /tmp/requirements.txt
@@ -7,10 +17,10 @@ RUN pip3  --disable-pip-version-check --no-cache-dir install -r /tmp/requirement
 RUN rm -v /tmp/requirements.txt
 RUN pip3 install -U yt-dlp
 
-RUN apt update && apt install -y ffmpeg
-
-# make the nonroot user
-RUN useradd user -m -s /usr/sbin/nologin
+# create the nonroot user "user" and add it to the sudoers group
+RUN useradd user -m -s /usr/sbin/nologin \
+ && adduser user sudo \
+ && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # copy the source code
 WORKDIR /home/user/app
@@ -19,6 +29,15 @@ COPY ./src ./
 # fix ownership of stuff inside application folder
 RUN chown -R user:user .
 
-# run uvicorn as nonroot
+# copy entrypoint script to root and make it executable
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod 555 /entrypoint.sh
+
+# expose ports 80 and 443 for nginx
+EXPOSE 80 443
+
+# switch to user "user"
 USER user
-CMD [ "python", "-m", "uvicorn", "server:app", "--host", "0.0.0.0", "--port", "4000", "--no-server-header", "--workers", "8" ]
+
+# run the entrypoint script to start nginx as root and run uvicorn as nonroot
+CMD [ "/entrypoint.sh" ]
