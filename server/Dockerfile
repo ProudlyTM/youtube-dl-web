@@ -13,9 +13,9 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # install deps as root
 COPY ./requirements.txt /tmp/requirements.txt
-RUN pip3  --disable-pip-version-check --no-cache-dir install -r /tmp/requirements.txt
-RUN rm -v /tmp/requirements.txt
-RUN pip3 install -U yt-dlp
+RUN pip3  --disable-pip-version-check --no-cache-dir install -r /tmp/requirements.txt \
+ && rm -v /tmp/requirements.txt \
+ && pip3 install -U yt-dlp
 
 # create the nonroot user "user" and add it to the sudoers group
 RUN useradd user -m -s /usr/sbin/nologin \
