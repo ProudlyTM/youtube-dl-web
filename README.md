@@ -1,8 +1,6 @@
 # 🚀 youtube-dl-web
 A good web interface for youtube-dl that allows you to download arbitrary mixes of audio and video, including up to the highest quality such as 8K.
 
-### [Go try it here at yt-dlp.us.to!](https://yt-dlp.us.to/)
-
 ![Screenshot of the Webpage](images/screenshot_front.png)
 
 ## Motive
@@ -48,10 +46,7 @@ The web application, **youtube-dl-web** aims to create a user-friendly interface
   You can simply replace "www.youtube.com" with the tool's URL (keeping the watch?v= part), and it will automatically pick up the video URL you
   are trying to use. 
 
-## Hosting Yourself
-If the publicly hosted version of this tool [here](https://yt-dlp.us.to/)
-doesn't quite do it for you, you can always self-host this in whatever
-configuration you like. The code is public, after all!
+## Hosting Instructions
 
 ### Architecture
 Youtube-dl-web relies on three main components:
